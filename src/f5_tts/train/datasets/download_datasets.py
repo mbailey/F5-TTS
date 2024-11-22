@@ -12,15 +12,25 @@ from tqdm import tqdm
 
 def check_hf_login():
     """Check if logged into Hugging Face and prompt for login if not"""
+    from huggingface_hub import HfApi
+    import os
+    
     try:
         api = HfApi()
         # Try to get user info to check login status
         api.whoami()
         print("Already logged into Hugging Face")
     except Exception:
-        print("\nNot logged into Hugging Face. Please login:")
-        from huggingface_hub.commands.user import login
-        login()
+        # Check for token in environment
+        token = os.getenv("HUGGINGFACE_ACCESS_TOKEN")
+        if token:
+            print("Using HUGGINGFACE_ACCESS_TOKEN from environment")
+            from huggingface_hub import login
+            login(token=token)
+        else:
+            print("\nNot logged into Hugging Face. Please login:")
+            from huggingface_hub.commands.user import login
+            login()
 
 
 def download_emilia(output_dir: str, revision: str = "fc71e07") -> None:
