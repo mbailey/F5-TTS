@@ -113,7 +113,17 @@ f5-tts_infer-cli -c src/f5_tts/infer/examples/multi/story.toml
 
 ## Training
 
-### 1. Gradio App
+### 1. Download Datasets
+
+```bash
+# Download Emilia and LibriTTS datasets
+python -m f5_tts.train.datasets.download_datasets
+
+# Or specify custom output directory
+python -m f5_tts.train.datasets.download_datasets --output_dir /path/to/datasets
+```
+
+### 2. Gradio App
 
 Read [training & finetuning guidance](src/f5_tts/train) for more instructions.
 
