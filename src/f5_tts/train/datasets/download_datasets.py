@@ -6,8 +6,21 @@ import subprocess
 from pathlib import Path
 from typing import Optional
 
-from huggingface_hub import snapshot_download
+from huggingface_hub import snapshot_download, HfApi
 from tqdm import tqdm
+
+
+def check_hf_login():
+    """Check if logged into Hugging Face and prompt for login if not"""
+    try:
+        api = HfApi()
+        # Try to get user info to check login status
+        api.whoami()
+        print("Already logged into Hugging Face")
+    except Exception:
+        print("\nNot logged into Hugging Face. Please login:")
+        from huggingface_hub.commands.user import login
+        login()
 
 
 def download_emilia(output_dir: str, revision: str = "fc71e07") -> None:
@@ -80,6 +93,9 @@ def main(output_dir: Optional[str] = None):
         output_dir = os.path.expanduser("~/datasets")
     
     print(f"\nDatasets will be downloaded to: {output_dir}")
+    
+    # Check HF login status before attempting downloads
+    check_hf_login()
     
     download_emilia(output_dir)
     download_libritts(output_dir)
